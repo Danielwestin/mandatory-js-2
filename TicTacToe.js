@@ -6,6 +6,7 @@ let boxes = document.querySelectorAll(".box");
 let elKnappo = document.querySelector(".elKnappo");
 let message = document.querySelector(".message");
 let popup = document.querySelector(".popup");
+let tie = document.querySelector(".tie");
 
 //----------------AMINATION----------------//
 
@@ -33,18 +34,17 @@ button1.addEventListener("click", () => {
   setTimeout( () => {
     elKnappo.style.animationName = "elKnappo";
     elKnappo.style.animationDuration = "1.5s"
-    setTimeout (() => {
+    setTimeout( () => {
       elKnappo.style.transform = "translate(400px, 320px)";
     }, 1500);
   },1000);
 });
 
 //------------------------Javascript--------------------//
-
+let amount = 0
 let turn = true;
-let winner = false;
 let box;
-let clicked;
+let gameOver = false;
 
 
 function nextMove(){
@@ -52,6 +52,7 @@ function nextMove(){
     let box = boxes[i];
 
     box.addEventListener("click", (e) => {
+      if (gameOver === true) return;
 
       let checkbox = e.target.textContent
       console.log(e.target);
@@ -59,103 +60,151 @@ function nextMove(){
 
               box.classList.add("tom");
               box.innerHTML = "X"
-
+              amount++;
               turn = false;
+
 
             } else if(!turn && checkbox === ""){
 
               box.classList.add("tom");
               box.innerHTML = "O"
-
+              amount++;
               turn = true;
+
             }
+            gameOverAgain();
             checkWinner();
+
     });
   };
 };
 nextMove();
 
-function clear(){
-  button2.addEventListener("click", () => {
-    for (let i = 0; i < boxes.length; i++){
-      let box = boxes[i];
-      box.classList.remove("tom");
-
-      box.innerHTML = "";
-      box.style.transition = "1s";
-
-      popup.style.display = "none";
-    };
-  });
-}
-clear();
-
-/*function setMessage(msg){
-  document.querySelector(".message").innerText = msg;
-}
-
 function checkWinner(){
-  let result = false;
-  if (checkRow(1,2,3, move) ||
-  checkRow(1,2,3, move) ||
-  checkRow(4,5,6, move) ||
-  checkRow(7,8,9, move) ||
-  checkRow(1,4,7, move) ||
-  checkRow(2,5,8, move) ||
-  checkRow(3,6,9, move) ||
-  checkRow(1,5,9, move) ||
-  checkRow(3,5,7, move)){
-    result = true;
+
+  let winCases = [
+    [0, 1, 2],
+    [3, 4, 5],
+    [6, 7, 8],
+    [0, 4, 8],
+    [2, 4, 6],
+    [0, 3, 6],
+    [1, 4, 7],
+    [2, 5, 8]
+  ];
+
+let won;
+
+for (let wins of winCases){
+  let wonX = true;
+  let wonO = true;
+
+  for (let win of wins){
+
+    if (boxes[win].textContent === "X"){
+      wonO = false;
+    } else if (boxes[win].textContent === "O"){
+      wonX = false;
+    } else if (boxes[win].textContent === "") {
+      wonO = false;
+      wonX = false;
+    }
   }
-  return result;
+
+  if (wonX) {
+    won = "X";
+    break;
+  } else if (wonO) {
+    won = "O";
+    break;
+  }
 }
 
-function checkRow(a,b,c,move){
-let result = false;
-if(getBox(a) == move && gotBox(b) == move && getBox(c) == move){
-  result = true;
+if (won) {
+    popup.textContent = won + " won";
+    popup.style.transition = "3s";
+    popup.style.display = "block";
+    gameOver = true;
+    console.log("WINNER IS ", won);
 }
-return result;
+else if (!won && amount === 9){
+
+  tie.style.animationName = "tie";
+  tie.style.animationDuration = "3s";
+  setTimeout( () => {
+    tie.style.transform = "translate(-460px, 150px)";
+  }, 3000);
+
+  //popup.textContent = "Oavgjort";
+  //popup.style.transition = "3s";
+  //popup.style.display = "block";
 }
 
-function getBox(number){
-  return document.getElementbyId("a" + number).innerText;
-}*/
+//   if (boxes[0].textContent === "X" && boxes[1].textContent === "X" && boxes[2].textContent === "X" ||
+//       boxes[3].textContent === "X" && boxes[4].textContent === "X" && boxes[5].textContent === "X" ||
+//       boxes[6].textContent === "X" && boxes[7].textContent === "X" && boxes[8].textContent === "X" ||
+//       boxes[0].textContent === "X" && boxes[4].textContent === "X" && boxes[8].textContent === "X" ||
+//       boxes[2].textContent === "X" && boxes[4].textContent === "X" && boxes[6].textContent === "X" ||
+//       boxes[0].textContent === "X" && boxes[3].textContent === "X" && boxes[6].textContent === "X" ||
+//       boxes[1].textContent === "X" && boxes[4].textContent === "X" && boxes[7].textContent === "X" ||
+//       boxes[2].textContent === "X" && boxes[5].textContent === "X" && boxes[8].textContent === "X")
+//       {
+//         console.log("x är vinnaren");
+//         popup.textContent = "X vann";
+//
+//         popup.style.transition = "3s";
+//         popup.style.display = "block";
+//         gameOver = false;
+//       }
+//
+//   else if (boxes[0].textContent === "O" && boxes[1].textContent === "O" && boxes[2].textContent === "O" ||
+//         boxes[3].textContent === "O" && boxes[4].textContent === "O" && boxes[5].textContent === "O" ||
+//         boxes[6].textContent === "O" && boxes[7].textContent === "O" && boxes[8].textContent === "O" ||
+//         boxes[0].textContent === "O" && boxes[4].textContent === "O" && boxes[8].textContent === "O" ||
+//         boxes[2].textContent === "O" && boxes[4].textContent === "O" && boxes[6].textContent === "O" ||
+//         boxes[0].textContent === "O" && boxes[3].textContent === "O" && boxes[6].textContent === "O" ||
+//         boxes[1].textContent === "O" && boxes[4].textContent === "O" && boxes[7].textContent === "O" ||
+//         boxes[2].textContent === "O" && boxes[5].textContent === "O" && boxes[8].textContent === "O")
+//         {
+//           console.log("O är vinnaren");
+//           popup.textContent = "O vann"
+//
+//           popup.style.transition = "3s";
+//           popup.style.display = "block";
+//           gameOver = false;
+//         }
+ };
 
-function checkWinner(){
+ function clear(){
+   button2.addEventListener("click", () => {
+     for (let i = 0; i < boxes.length; i++){
+       let box = boxes[i];
+       box.classList.remove("tom");
+       box.innerHTML = "";
+       //box.style.transition = "1s";
+       popup.style.display = "none";
 
-  if (boxes[0].textContent.textContent === "X" && boxes[1].textContent === "X" && boxes[2].textContent === "X" ||
-      boxes[3].textContent === "X" && boxes[4].textContent === "X" && boxes[5].textContent === "X" ||
-      boxes[6].textContent === "X" && boxes[7].textContent === "X" && boxes[8].textContent === "X" ||
-      boxes[0].textContent === "X" && boxes[4].textContent === "X" && boxes[8].textContent === "X" ||
-      boxes[2].textContent === "X" && boxes[4].textContent === "X" && boxes[6].textContent === "X" ||
-      boxes[0].textContent === "X" && boxes[3].textContent === "X" && boxes[6].textContent === "X" ||
-      boxes[1].textContent === "X" && boxes[4].textContent === "X" && boxes[7].textContent === "X" ||
-      boxes[2].textContent === "X" && boxes[5].textContent === "X" && boxes[8].textContent === "X")
-      {
-        console.log("x är vinnaren");
-        popup.textContent = "X vann";
 
-        popup.style.transition = "3s";
-        popup.style.display = "block";
-      }
+       if (amount === 9){
+         tie.style.animationName = "tieDown";
+         tie.style.animationDuration = "4s";
+         setTimeout( () => {
+           tie.style.transform = "translate(-460px, 450px)";
+         }, 4000);
+       }
+       amount = 0;
 
-  else if (boxes[0].textContent === "O" && boxes[1].textContent === "O" && boxes[2].textContent === "O" ||
-        boxes[3].textContent === "O" && boxes[4].textContent === "O" && boxes[5].textContent === "O" ||
-        boxes[6].textContent === "O" && boxes[7].textContent === "O" && boxes[8].textContent === "O" ||
-        boxes[0].textContent === "O" && boxes[4].textContent === "O" && boxes[8].textContent === "O" ||
-        boxes[2].textContent === "O" && boxes[4].textContent === "O" && boxes[6].textContent === "O" ||
-        boxes[0].textContent === "O" && boxes[3].textContent === "O" && boxes[6].textContent === "O" ||
-        boxes[1].textContent === "O" && boxes[4].textContent === "O" && boxes[7].textContent === "O" ||
-        boxes[2].textContent === "O" && boxes[5].textContent === "O" && boxes[8].textContent === "O")
-        {
-          console.log("O är vinnaren");
-          popup.textContent = "O vann"
+       gameOverAgain();
 
-          popup.style.transition = "3s";
-          popup.style.display = "block";
-        }
-};
+     };
+   });
+ }
+ clear();
+
+  function gameOverAgain(){
+    gameOver = false;
+  }
+
 
 
 

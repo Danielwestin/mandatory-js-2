@@ -13,7 +13,7 @@ body{
   justify-content: center;
   align-items: center;
   flex-direction: column;
-  overflow: hidden;
+
 }
 
 .moveButton{
@@ -52,6 +52,7 @@ body{
   color: #BB2528;
   z-index: 10;
   font-family: 'Lobster', cursive;
+
 }
 
 .playArea{
@@ -95,7 +96,33 @@ body{
 }
 
 
+.tie{
+  background-image: url("Images/slips1.png");
+  transform: translate(-450px, 450px);
+  width: 200px;
+  height: 200px;
+  position: absolute;
+  background-size: 100%;
+  background-repeat: no-repeat;
+}
 
+@keyframes tie {
+  from{
+    transform: translate(-460px, 450px);
+  }
+  to{
+    transform: translate(-460px, 150px);
+  }
+}
+
+@keyframes tieDown{
+  from{
+    transform: translate(-460px, 150px);
+  }
+  to{
+    transform: translate(-460px, 450px);
+  }
+}
 
 
 .box{
